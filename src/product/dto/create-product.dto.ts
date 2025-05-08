@@ -1,10 +1,4 @@
-import {
-  IsDecimal,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  MinLength,
-} from 'class-validator';
+import { IsDecimal, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateProductDto {
   @IsString()
@@ -13,7 +7,7 @@ export class CreateProductDto {
 
   @IsString()
   @IsOptional()
-  imag: string;
+  image: string;
 
   @IsDecimal()
   @IsNotEmpty()
@@ -26,7 +20,7 @@ export class CreateProductDto {
   @IsString()
   @IsNotEmpty()
   type: string;
-  
+
   @IsOptional()
   inStock: boolean;
 }

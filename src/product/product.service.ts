@@ -13,25 +13,38 @@ export class ProductService {
   ) {}
 
   async create(createProductDto: CreateProductDto) {
-    const product = await this.productRepository.save(createProductDto)
+    const product = await this.productRepository.save(createProductDto);
     return product;
   }
 
   async findAll() {
-    const product= await this.productRepository.find();
-    return { productlist: product };
-  }
-  
-
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+    const product = await this.productRepository.find();
+    return [...product];
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
+  async findOne(id: string) {
+    const product = await this.productRepository.findOneBy({
+      id,
+    });
+    if (!product) {
+      throw new Error(`Product with id ${id} not found`);
+    }
+    return product;
+  }
+
+  async update(id: string, updateProductDto: UpdateProductDto) {
     return `This action updates a #${id} product`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: string) {
+    const product = await this.productRepository.findOneBy({
+      id,
+    });
+    if (!product) {
+      throw new Error(`Product with id ${id} not found`);
+    }
+    await this.productRepository.delete(id);
+    console.log(`Product with id ${id} deleted`);
+    return product;
   }
 }
