@@ -1,0 +1,14 @@
+# Puerto de la aplicación
+PORT=3000
+# Entorno (dev|prod|test)
+ENV='dev'
+# Configuración JWT
+JWT_KEY='12345'
+JWT_EXPIRES_IN='2h'
+
+# Configuración de PostgreSQL
+BD_PORT=5432
+BD_HOST='localhost'
+BD_NAME='testdb'
+BD_USERNAME='postgres'
+BD_PASSWORD='12345'

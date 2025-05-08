@@ -17,7 +17,7 @@ export class Product {
   @Column('text', {
     default: [''],
   })
-  imag: string;
+  image: string;
 
   @Column('decimal')
   price: number;

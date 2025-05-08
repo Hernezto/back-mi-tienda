@@ -19,12 +19,13 @@ export class AuthService {
     @InjectRepository(User) private readonly authRepository: Repository<User>,
     private readonly jwtService: JwtService,
   ) {}
-  
+
   async create(createAuthDto: CreateAuthDto) {
+    console.log('createAuthDto', createAuthDto);
     const { password, ...userData } = createAuthDto;
-    
+
     const user = await this.authRepository.findOneBy({
-      username: createAuthDto.username,
+      email: createAuthDto.email,
     });
 
     if (user) throw new ConflictException('This username is in use');
@@ -36,18 +37,17 @@ export class AuthService {
     });
     await this.authRepository.save(userCreate);
 
-      return {
-        token: this.getJwt({
-          id: userCreate.id,
-          username: userCreate.username,
-        }),
-      };
-      
+    return {
+      token: this.getJwt({
+        id: userCreate.id,
+        username: userCreate.email,
+      }),
+    };
   }
 
   async login(loginAuthDto: LoginAuthDto) {
-    const { username, password } = loginAuthDto;
-    const user = await this.authRepository.findOneBy({ username: username });
+    const { email, password } = loginAuthDto;
+    const user = await this.authRepository.findOneBy({ email });
 
     if (!user)
       throw new UnauthorizedException('Credenciales no validas (username)');
@@ -58,7 +58,7 @@ export class AuthService {
     return {
       token: this.getJwt({
         id: user.id,
-        username: user.username,
+        username: user.email,
       }),
     };
   }
@@ -67,7 +67,7 @@ export class AuthService {
     const users = await this.authRepository.find();
     return { userlist: users };
   }
-  
+
   findOne(id: number) {
     return `This action returns a #${id} auth`;
   }
