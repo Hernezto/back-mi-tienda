@@ -1,35 +1,25 @@
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('products')
+@Entity()
 export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('text')
+  @Column()
   name: string;
 
-  @Column('text', {
-    default: [''],
-  })
+  @Column({ nullable: true })
   image: string;
 
   @Column('decimal')
   price: number;
 
-  @Column('text')
+  @Column()
   description: string;
 
-  @Column('text')
+  @Column()
   type: string;
 
-  @Column('bool', {
-    default: true,
-  })
+  @Column({ default: true, nullable: true })
   inStock: boolean;
 }

@@ -5,7 +5,6 @@ export class CreateProductDto {
   @IsNotEmpty()
   name: string;
 
-  @IsString()
   @IsOptional()
   image: string;
 

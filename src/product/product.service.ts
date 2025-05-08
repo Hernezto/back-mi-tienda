@@ -13,8 +13,8 @@ export class ProductService {
   ) {}
 
   async create(createProductDto: CreateProductDto) {
-    const product = await this.productRepository.save(createProductDto);
-    return product;
+    const product = this.productRepository.create(createProductDto); // Map DTO to entity
+    return await this.productRepository.save(product); // Save the entity
   }
 
   async findAll() {
