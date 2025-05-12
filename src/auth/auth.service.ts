@@ -40,7 +40,7 @@ export class AuthService {
     return {
       token: this.getJwt({
         id: userCreate.id,
-        username: userCreate.email,
+        email: userCreate.email,
       }),
     };
   }
@@ -50,7 +50,7 @@ export class AuthService {
     const user = await this.authRepository.findOneBy({ email });
 
     if (!user)
-      throw new UnauthorizedException('Credenciales no validas (username)');
+      throw new UnauthorizedException('Credenciales no validas (email)');
 
     if (!bcrypt.compareSync(password, user.password))
       throw new UnauthorizedException('Credencailes no validas (password)');
@@ -58,7 +58,7 @@ export class AuthService {
     return {
       token: this.getJwt({
         id: user.id,
-        username: user.email,
+        email: user.email,
       }),
     };
   }
@@ -70,6 +70,22 @@ export class AuthService {
 
   findOne(id: number) {
     return `This action returns a #${id} auth`;
+  }
+
+  async getAuthByToken(token: string) {
+    let user: JwtPayload;
+    try {
+      user = this.jwtService.decode(token);
+    } catch (e) {
+      console.log('error', e);
+      return JSON.stringify({ msg: 'Token no valido/expirado' });
+    }
+
+    if (!user) return JSON.stringify({ msg: 'Token no valido' });
+    const { id } = user;
+    const userData = await this.authRepository.findOneBy({ id });
+    if (!userData) return JSON.stringify({ msg: 'Token no valido' });
+    return JSON.stringify({ id: userData.id, valid: true });
   }
 
   update(id: number, updateAuthDto: UpdateAuthDto) {
