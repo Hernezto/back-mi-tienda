@@ -85,7 +85,11 @@ export class AuthService {
     const { id } = user;
     const userData = await this.authRepository.findOneBy({ id });
     if (!userData) return JSON.stringify({ msg: 'Token no valido' });
-    return JSON.stringify({ id: userData.id, valid: true });
+    return JSON.stringify({
+      id: userData.id,
+      valid: true,
+      token: userData.email,
+    });
   }
 
   update(id: number, updateAuthDto: UpdateAuthDto) {
