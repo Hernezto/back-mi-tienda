@@ -89,6 +89,7 @@ export class AuthService {
       id: userData.id,
       valid: true,
       token: userData.email,
+      role: userData.rols,
     });
   }
 
