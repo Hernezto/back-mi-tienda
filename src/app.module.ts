@@ -7,9 +7,30 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JoiValidationSchema } from './config/joi.config';
 import { envConfiguration } from './config/env.config';
 import { ProductModule } from './product/product.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
+import * as fs from 'fs';
 
 @Module({
   imports: [
+    MulterModule.register({
+      storage: diskStorage({
+        destination: (req, file, cb) => {
+          const uploadPath = './uploads';
+          if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true }); // Crea la carpeta si no existe
+          }
+          cb(null, uploadPath);
+        },
+        filename: (req, file, cb) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
+        },
+      }),
+    }),
     AuthModule,
     ProductModule,
     ConfigModule.forRoot({
@@ -17,7 +38,7 @@ import { ProductModule } from './product/product.module';
       validationSchema: JoiValidationSchema,
       isGlobal: true, // Hace que ConfigModule esté disponible en toda la app
     }),
-    
+
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -39,7 +60,7 @@ import { ProductModule } from './product/product.module';
         logging: configService.get<string>('environment') === 'dev', // Logs solo en desarrollo
       }),
     }),
-    
+
     ProductModule,
   ],
   controllers: [AppController],

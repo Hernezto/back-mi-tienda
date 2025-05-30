@@ -8,7 +8,7 @@ export class Product {
   @Column()
   name: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'bytea', nullable: true })
   image: string;
 
   @Column('decimal')
